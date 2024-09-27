@@ -18,6 +18,7 @@ import shutil
 import pickle
 import os
 import datetime
+import sv_ttk
 
 from datetime import datetime
 from tkinter import *
@@ -28,7 +29,8 @@ import tkinter.filedialog
 #### Frame #### 
 root = Tk()
 root.title("TSFAB")
-root.geometry("630x385")
+root.geometry("850x520")
+sv_ttk.set_theme("dark")
 
 GameEntriesList = [] ## part of the next system to have seperated folders for each game       
 SourceEntriesList = [] ## list as displayed in the GOOEY (this is messy af and needs to be STOPPED)
@@ -137,40 +139,40 @@ root.rowconfigure(0, weight=1)
 
 ttk.Label(mainframe, text="TWIM's Save File Auto Backup").grid(column=2, row=1, sticky=(N))
 
-ttk.Label(mainframe, text="Game Name").grid(column=2, row=12, sticky=(W))
+ttk.Label(mainframe, text="Game Name").grid(column=2, row=12, sticky=(W), pady=7)
 GameEntered = StringVar()
 GameNameEntry = ttk.Entry(mainframe, width=100, textvariable=GameEntered)
 GameNameEntry.grid(column=2, row=13, sticky=(W, E))
 
-ttk.Label(mainframe, text="Source File Path").grid(column=2, row=16, sticky=(W))
+ttk.Label(mainframe, text="Source File Path").grid(column=2, row=16, sticky=(W),)
 SourcePathEntered = StringVar()
 SourcePathEntry = ttk.Entry(mainframe, width=100, textvariable=SourcePathEntered)
-SourcePathEntry.grid(column=2, row=17, sticky=(W, E))
+SourcePathEntry.grid(column=2, row=17, sticky=(W, E), pady=1)
 
-ttk.Button(mainframe, text="Browse", command=SourceFileEntryBrowse).grid(column=2, row=16, sticky=(E))
+ttk.Button(mainframe, text="Browse", command=SourceFileEntryBrowse).grid(column=2, row=16, sticky=(E), pady=3)
 
 ttk.Label(mainframe, text="Destination Path").grid(column=2, row=18, sticky=(W))
 DestinationPathEntered = StringVar()
 DestinationPathEntry = ttk.Entry(mainframe, width=100, textvariable=DestinationPathEntered)
-DestinationPathEntry.grid(column=2, row=19, sticky=(W, E))
+DestinationPathEntry.grid(column=2, row=19, sticky=(W, E), pady=1)
 
-ttk.Button(mainframe, text="Browse", command=DestinationPathEntryBrowse).grid(column=2, row=18, sticky=(E))
+ttk.Button(mainframe, text="Browse", command=DestinationPathEntryBrowse).grid(column=2, row=18, sticky=(E), pady=3)
 
-ttk.Button(mainframe, text="Save To list", command=SaveToList).grid(column=2, row=20, sticky=(S, W))
+ttk.Button(mainframe, text="Add Save", command=SaveToList).grid(column=2, row=20, sticky=(S, W), pady=(3, 5))
 
-SaveListBox = Listbox(mainframe, listvariable=SaveFileListVar, height=10, width=80)
-SaveListBox.grid(column=2, row=21, sticky=(N, W))
-GameNameBox = Listbox(mainframe, listvariable=GameNameListVar, height=10, width=20, state=DISABLED)
-GameNameBox.grid(column=2, row=21, sticky=(N, E))
+SaveListBox = Listbox(mainframe, listvariable=SaveFileListVar, height=12, width=120)
+SaveListBox.grid(column=2, row=21, sticky=(W))
+GameNameBox = Listbox(mainframe, listvariable=GameNameListVar, height=12, width=15, state=DISABLED)
+GameNameBox.grid(column=2, row=21, sticky=(E))
 
-RemoveListButton = ttk.Button(mainframe, text="Remove From List", state=DISABLED, command=RemoveFromList)
-RemoveListButton.grid(column=2, row=20, sticky=(S))
+RemoveListButton = ttk.Button(mainframe, text="Remove Save", state=DISABLED, command=RemoveFromList)
+RemoveListButton.grid(column=2, row=20, sticky=(S, E), pady=(0, 5))
 
 SaveListBox.bind("<Button-1>", EnableListButton)
 
-ttk.Button(mainframe, text="Backup List", command=BackupList).grid(column=2, row=27, sticky=(S))
+ttk.Button(mainframe, text="Backup List", command=BackupList).grid(column=2, row=27, sticky=(S), pady=2)
 
-ttk.Button(mainframe, text="Save List", command=SaveList).grid(column=2, row=27, sticky=(S, W))
+ttk.Button(mainframe, text="Save List", command=SaveList).grid(column=2, row=27, sticky=(S, W), pady=2)
 
 
 ## autoload function lite make this a class
