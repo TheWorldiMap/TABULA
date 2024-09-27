@@ -29,8 +29,6 @@ import tkinter.filedialog
 root = Tk()
 root.title("TSFAB")
 root.geometry("630x385")
-root.tk.call("source", "azure.tcl")
-root.tk.call("set_theme", "dark")
 
 GameEntriesList = [] ## part of the next system to have seperated folders for each game       
 SourceEntriesList = [] ## list as displayed in the GOOEY (this is messy af and needs to be STOPPED)
