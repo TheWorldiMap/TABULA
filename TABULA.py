@@ -28,7 +28,7 @@ import tkinter.filedialog
 
 #### Frame #### 
 root = Tk()
-root.title("TSFAB")
+root.title("T.A.BU.L.A")
 root.geometry("850x520")
 sv_ttk.set_theme("dark")
 
@@ -137,7 +137,7 @@ mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
-ttk.Label(mainframe, text="TWIM's Save File Auto Backup").grid(column=2, row=1, sticky=(N))
+ttk.Label(mainframe, text="TWIM's semi-Automatic Back-Up & Load Application").grid(column=2, row=1, sticky=(N))
 
 ttk.Label(mainframe, text="Game Name").grid(column=2, row=12, sticky=(W), pady=7)
 GameEntered = StringVar()
