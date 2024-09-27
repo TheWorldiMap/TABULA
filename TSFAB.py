@@ -29,49 +29,78 @@ root.title("TSFAB")
 root.geometry("630x470")
 
 
-GameNameList = [] ## part of the next system to have seperated folders for each game       
-SaveFileList = [] ## list as displayed in the GOOEY (this is messy af and needs to be STOPPED)
-SaveBackupData = []  ## Workhorse Data stucture should be an easy JSON when i lean that
+GameEntriesList = [] ## part of the next system to have seperated folders for each game       
+SourceEntriesList = [] ## list as displayed in the GOOEY (this is messy af and needs to be STOPPED)
+EntriesList = []  ## Workhorse Data stucture should be an easy JSON when i lean that
+FormattedEntries = [] ## workhorse part 2
 
-SaveFileListVar = StringVar(value=SaveFileList)
-GameNameListVar = StringVar(value=GameNameList)
+SaveFileListVar = StringVar(value=SourceEntriesList)
+GameNameListVar = StringVar(value=GameEntriesList)
 
 Today = datetime.today().strftime('%Y-%m-%d')
 
 def SaveList():
     with open("BackupsList.dat", "wb") as Data:
-        pickle.dump(SaveBackupData, Data)
-        pickle.dump(SaveFileList, Data)
-        pickle.dump(GameNameList, Data)
+        pickle.dump(EntriesList, Data)
+        pickle.dump(SourceEntriesList, Data)
+        pickle.dump(GameEntriesList, Data)
+        pickle.dump(FormattedEntries, Data)
         
 ## this looks kinda raw to my eyes but i am actually proud of how simple this is
 def BackupList():
-    ListFullSources = [Source["SourceFilePath"] for Source in SaveBackupData]
-    ListFullDestinations = [Destination["FullDestPath"] for Destination in SaveBackupData]
-    ListDestPath = [Paths["DestPath"] for Paths in SaveBackupData]
-    for Source in ListFullSources:
-       for Destination in ListFullDestinations:
-           for Paths in ListDestPath:
-                if not os.path.exists(Paths):
-                    os.makedirs(Paths)
-                    shutil.copy(Source, Destination)  
-                else:
-                    shutil.copy(Source, Destination)
- 
-## i could do this better if i knew what i was doing when i started it...   
+    FormatEntries()
+    list_full_sources = [FullSource["Full Source"] for FullSource in FormattedEntries]
+    list_full_destinations = [FullDestination["Full Destination"] for FullDestination in FormattedEntries]
+    list_destination_paths = [DestinationPath["Destination Path"] for DestinationPath in FormattedEntries]
+    
+    for FullDestination, FullSource, DestinationPath in zip(list_full_destinations, list_full_sources, list_destination_paths):
+        if not os.path.exists(DestinationPath):
+            os.makedirs(DestinationPath)
+            shutil.copy(FullSource, FullDestination)
+        else:
+            shutil.copy(FullSource, FullDestination)
+            
+def FormatEntries():
+    list_games = [Game["Game"] for Game in EntriesList]
+    list_source_files = [SourceFile["Source File"] for SourceFile in EntriesList]
+    list_source_paths = [SourcePath["Source Path"] for SourcePath in EntriesList]
+    list_destination_paths = [DestinationPath["Destination Path"] for DestinationPath in EntriesList]
+    
+    for Game, SourceFile, SourcePath, DestinationPath in zip(list_games, list_source_files, list_source_paths, list_destination_paths):
+        full_source = (SourcePath + "\\" + SourceFile)
+        full_destination = (DestinationPath + "\\" + Game + "\\" + Today + "\\" + SourceFile)
+        destination_path = (DestinationPath + "\\" + Game + "\\" + Today + "\\")
+        
+        formatted_entry = {
+            "Full Source" : full_source,
+            "Full Destination" : full_destination,
+            "Destination Path" : destination_path
+            }
+        FormattedEntries.append(formatted_entry)
+        
+        
+## i could do this better if i knew what i was doing when i started it... -- fixed it a bit but also MAKE THIS A CLASS  
 def SaveToList():
-    GameNameEntered = GameName.get()
-    DestinationFolderFormatted = DestinationPath.get() + "\\" + GameNameEntered + "\\" + Today
-    SourceFilePathD = SourceFilePath.get()
-    SourceFile = os.path.basename(SourceFilePathD)
-    DestinationFilePath = DestinationFolderFormatted + "\\" + SourceFile
-    SaveBackupDict = {"SourceFilePath" : SourceFilePathD, "FullDestPath" : DestinationFilePath, "FileNames" : SourceFile, "DestPath" : DestinationFolderFormatted }
-    SaveBackupData.append(SaveBackupDict)
-    SaveFileList.append(SourceFilePathD)
-    SaveFileListVar.set(SaveFileList)
-    GameNameList.append(GameNameEntered)
-    GameNameListVar.set(GameNameList)
-
+    game_entered = GameEntered.get()
+    source_entered = SourceFile.get()
+    destination_entered = DestinationPathEntered.get() 
+    source_file = os.path.basename(source_entered)
+    source_path = os.path.dirname(source_entered)
+    entires_dict = {
+        "Game" : game_entered,
+        "Source File" : source_file,
+        "Source Path" : source_path, 
+        "Destination Path" : destination_entered,
+    }
+    EntriesList.append(entires_dict)
+    SourceEntriesList.append(source_entered)
+    GameEntriesList.append(game_entered)
+    UpdateLists()
+    
+def UpdateLists():
+    GameNameListVar.set(GameEntriesList)
+    SaveFileListVar.set(SourceEntriesList)
+    
 ## This    
 def EnableListButton(*args):
     RemoveListButton.configure(state=ACTIVE)
@@ -80,13 +109,13 @@ def EnableListButton(*args):
 def RemoveFromList():
     SelectedIndex = SaveListBox.curselection()
     list(SelectedIndex)
-    del SaveFileList[SelectedIndex[0]]
-    del GameNameList[SelectedIndex[0]]
+    del SourceEntriesList[SelectedIndex[0]]
+    del GameEntriesList[SelectedIndex[0]]
     SaveListBox.delete([SelectedIndex[0]])
     GameNameBox.delete([SelectedIndex[0]])
-    SaveBackupData.pop(SelectedIndex[0])
+    EntriesList.pop(SelectedIndex[0])
     RemoveListButton.configure(state=DISABLED)
-    GameNameListVar.set(GameNameList)
+    UpdateLists()
     
     
 ## GOOEY - this is kinda wackily formatted and will be a problem later but IT JUST WORKS 
@@ -98,18 +127,18 @@ root.rowconfigure(0, weight=1)
 ttk.Label(mainframe, text="TWIM's Save File Auto Backup").grid(column=2, row=1, sticky=(N))
 
 ttk.Label(mainframe, text="Game Name").grid(column=2, row=12, sticky=(W))
-GameName = StringVar()
-GameNameEntry = ttk.Entry(mainframe, width=100, textvariable=GameName)
+GameEntered = StringVar()
+GameNameEntry = ttk.Entry(mainframe, width=100, textvariable=GameEntered)
 GameNameEntry.grid(column=2, row=13, sticky=(W, E))
 
 ttk.Label(mainframe, text="Source File Path").grid(column=2, row=16, sticky=(W))
-SourceFilePath = StringVar()
-SourcePathEntry = ttk.Entry(mainframe, width=100, textvariable=SourceFilePath)
+SourceFile = StringVar()
+SourcePathEntry = ttk.Entry(mainframe, width=100, textvariable=SourceFile)
 SourcePathEntry.grid(column=2, row=17, sticky=(W, E))
 
 ttk.Label(mainframe, text="Destination Path").grid(column=2, row=18, sticky=(W))
-DestinationPath = StringVar()
-DestinationPathEntry = ttk.Entry(mainframe, width=100, textvariable=DestinationPath)
+DestinationPathEntered = StringVar()
+DestinationPathEntry = ttk.Entry(mainframe, width=100, textvariable=DestinationPathEntered)
 DestinationPathEntry.grid(column=2, row=19, sticky=(W, E))
 
 ttk.Button(mainframe, text="Save To list", command=SaveToList).grid(column=2, row=20, sticky=(S, W))
@@ -129,18 +158,19 @@ ttk.Button(mainframe, text="Backup List", command=BackupList).grid(column=2, row
 ttk.Button(mainframe, text="Save List", command=SaveList).grid(column=2, row=27, sticky=(S, W))
 
 
-## autoload function lite
+## autoload function lite make this a class
 if os.path.exists("BackupsList.dat"):
     print("loading")
     with open("BackupsList.dat", "rb") as Data:
-            SaveBackupData = pickle.load(Data)
-            SaveFileList = pickle.load(Data)
-            GameNameList = pickle.load(Data)
-            print(SaveBackupData)
-            print(SaveFileList)
-            print(GameNameList)
-            SaveFileListVar.set(SaveFileList)
-            GameNameListVar.set(GameNameList)
+            EntriesList = pickle.load(Data)
+            SourceEntriesList = pickle.load(Data)
+            GameEntriesList = pickle.load(Data)
+            FormattedEntries = pickle.load(Data)
+            print(EntriesList)
+            print(SourceEntriesList)
+            print(GameEntriesList)
+            print(FormattedEntries)
+            UpdateLists()
             
             
 root.mainloop()
