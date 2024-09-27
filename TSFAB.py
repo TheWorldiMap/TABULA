@@ -22,11 +22,13 @@ import datetime
 from datetime import datetime
 from tkinter import *
 from tkinter import ttk
+import tkinter.dialog
+import tkinter.filedialog
 
 #### Frame #### 
 root = Tk()
 root.title("TSFAB")
-root.geometry("630x470")
+root.geometry("630x385")
 
 
 GameEntriesList = [] ## part of the next system to have seperated folders for each game       
@@ -82,7 +84,7 @@ def FormatEntries():
 ## i could do this better if i knew what i was doing when i started it... -- fixed it a bit but also MAKE THIS A CLASS  
 def SaveToList():
     game_entered = GameEntered.get()
-    source_entered = SourceFile.get()
+    source_entered = SourcePathEntered.get()
     destination_entered = DestinationPathEntered.get() 
     source_file = os.path.basename(source_entered)
     source_path = os.path.dirname(source_entered)
@@ -117,8 +119,18 @@ def RemoveFromList():
     RemoveListButton.configure(state=DISABLED)
     UpdateLists()
     
+def SourceFileEntryBrowse():
+    source_path_entered = tkinter.filedialog.askopenfilename()
+    SourcePathEntry.delete(0, END)
+    SourcePathEntry.insert(1, source_path_entered)
     
-## GOOEY - this is kinda wackily formatted and will be a problem later but IT JUST WORKS 
+def DestinationPathEntryBrowse():
+    destination_path_entered = tkinter.filedialog.askdirectory()
+    DestinationPathEntry.delete(0, END)
+    DestinationPathEntry.insert(1, destination_path_entered)
+    
+    
+## GOOEY - this is kinda wackily formatted and will be a problem later but IT JUST WORKS -- MAKE THIS A CLASS
 mainframe = ttk.Frame(root, padding="12 12 12 12")
 mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
 root.columnconfigure(0, weight=1)
@@ -132,14 +144,18 @@ GameNameEntry = ttk.Entry(mainframe, width=100, textvariable=GameEntered)
 GameNameEntry.grid(column=2, row=13, sticky=(W, E))
 
 ttk.Label(mainframe, text="Source File Path").grid(column=2, row=16, sticky=(W))
-SourceFile = StringVar()
-SourcePathEntry = ttk.Entry(mainframe, width=100, textvariable=SourceFile)
+SourcePathEntered = StringVar()
+SourcePathEntry = ttk.Entry(mainframe, width=100, textvariable=SourcePathEntered)
 SourcePathEntry.grid(column=2, row=17, sticky=(W, E))
+
+ttk.Button(mainframe, text="Browse", command=SourceFileEntryBrowse).grid(column=2, row=16, sticky=(E))
 
 ttk.Label(mainframe, text="Destination Path").grid(column=2, row=18, sticky=(W))
 DestinationPathEntered = StringVar()
 DestinationPathEntry = ttk.Entry(mainframe, width=100, textvariable=DestinationPathEntered)
 DestinationPathEntry.grid(column=2, row=19, sticky=(W, E))
+
+ttk.Button(mainframe, text="Browse", command=DestinationPathEntryBrowse).grid(column=2, row=18, sticky=(E))
 
 ttk.Button(mainframe, text="Save To list", command=SaveToList).grid(column=2, row=20, sticky=(S, W))
 
