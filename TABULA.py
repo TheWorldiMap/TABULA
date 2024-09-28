@@ -26,7 +26,7 @@ from tkinter import ttk
 import tkinter.dialog
 import tkinter.filedialog
  
-class GLOBAL_VARS: ## Data that everything touches 
+class GLOBAL_VARS: ## Data that everything touches
     
     GameEntriesList = [] ## part of the next system to have seperated folders for each game       
     SourceEntriesList = [] ## list as displayed in the GOOEY (this is messy af and needs to be STOPPED)
@@ -142,9 +142,9 @@ class DATA_SAVER: ## Saves Backup lists and other things to a dat
             DATA_SAVER.LoadList()
             LIST_MANAGER.UpdateLists()
 
-class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a problem later but IT JUST WORKS -- MAKE THIS A CLASS -- Made this a class
+class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a problem later but IT JUST WORKS -- MAKE THIS A CLASS
     
-    def __init__(self, mainframe):
+    def __init__(self, root):
 
         root.title("T.A.BU.L.A")
         root.geometry("850x520")
@@ -197,7 +197,11 @@ class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a probl
 
         ttk.Button(mainframe, text="Save List", command=DATA_SAVER.SaveList).grid(column=2, row=27, sticky=(S, W), pady=2)
 
-root = Tk()            
-TABULA_GUI(root) 
-DATA_SAVER.AutoLoad()
-root.mainloop()
+def main():
+    root = Tk()            
+    TABULA_GUI(root) 
+    DATA_SAVER.AutoLoad()
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
