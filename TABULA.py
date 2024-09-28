@@ -195,8 +195,6 @@ class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a probl
 
         ttk.Button(mainframe, text="Backup List", command=BACKUP_AND_LOAD.BackupSaves).grid(column=2, row=27, sticky=(S), pady=2)
 
-        ttk.Button(mainframe, text="Save List", command=DATA_SAVER.SaveList).grid(column=2, row=27, sticky=(S, W), pady=2)
-
 def main():
     root = Tk()            
     TABULA_GUI(root) 
