@@ -77,6 +77,7 @@ class LIST_MANAGER: ## Manages all the Lists functions
         GLOBAL_VARS.SourceEntriesList.append(source_entered)
         GLOBAL_VARS.GameEntriesList.append(game_entered)
         LIST_MANAGER.UpdateLists()
+        DATA_SAVER.SaveList()
 
     def EnableListButton(*args):
         TABULA_GUI.RemoveListButton.configure(state=ACTIVE)
@@ -90,6 +91,7 @@ class LIST_MANAGER: ## Manages all the Lists functions
         GLOBAL_VARS.EntriesList.pop(SelectedIndex[0])
         TABULA_GUI.RemoveListButton.configure(state=DISABLED)
         LIST_MANAGER.UpdateLists()
+        DATA_SAVER.SaveList()
 
     def SourceFileEntryBrowse():
         source_path_entered = tkinter.filedialog.askopenfilename()
@@ -193,7 +195,13 @@ class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a probl
 
         SaveListBox.bind("<Button-1>", LIST_MANAGER.EnableListButton)
 
-        ttk.Button(mainframe, text="Backup List", command=BACKUP_AND_LOAD.BackupSaves).grid(column=2, row=27, sticky=(S), pady=2)
+        ttk.Button(mainframe, text="Backup", command=BACKUP_AND_LOAD.BackupSaves).grid(column=2, row=27, sticky=(S), pady=2)
+        
+        ## LoadTree = ttk.Treeview(mainframe) leaning loadtree
+        ## LoadTree.grid(column=2, row=30, sticky=S)
+
+        
+        
 
 def main():
     root = Tk()            
