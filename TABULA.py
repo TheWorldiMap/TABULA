@@ -38,7 +38,7 @@ class GLOBAL_VARS: ## Data that everything touches
     Today = datetime.today().strftime('%Y-%m-%d')
 
 class LIST_MANAGER: ## Manages all the Lists functions
-           
+    
     def FormatEntries():
         list_games = [Game["Game"] for Game in GLOBAL_VARS.EntriesList]
         list_source_files = [SourceFile["Source File"] for SourceFile in GLOBAL_VARS.EntriesList]
@@ -184,21 +184,22 @@ class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a probl
         ttk.Button(mainframe, text="Add Save", command=LIST_MANAGER.SaveToList).grid(column=2, row=20, sticky=(S, W), pady=(3, 5))
         
         ### MAKE THIS A TREEVIEW MY GOD 
-        SaveListBox = Listbox(mainframe, listvariable=TABULA_GUI.SaveFileListVar, height=12, width=120)
-        SaveListBox.grid(column=2, row=21, sticky=(W))
-        GameNameBox = Listbox(mainframe, listvariable=TABULA_GUI.GameNameListVar, height=12, width=15, state=DISABLED)
-        GameNameBox.grid(column=2, row=21, sticky=(E))
+        TABULA_GUI.SaveListBox = Listbox(mainframe, listvariable=TABULA_GUI.SaveFileListVar, height=12, width=120)
+        TABULA_GUI.SaveListBox.grid(column=2, row=21, sticky=(W))
+        TABULA_GUI.GameNameBox = Listbox(mainframe, listvariable=TABULA_GUI.GameNameListVar, height=12, width=15, state=DISABLED)
+        TABULA_GUI.GameNameBox.grid(column=2, row=21, sticky=(E))
 
-        RemoveListButton = ttk.Button(mainframe, text="Remove Save", state=DISABLED, command=LIST_MANAGER.RemoveFromList)
-        RemoveListButton.grid(column=2, row=20, sticky=(S, E), pady=(0, 5))
+        TABULA_GUI.RemoveListButton = ttk.Button(mainframe, text="Remove Save", state=DISABLED, command=LIST_MANAGER.RemoveFromList)
+        TABULA_GUI.RemoveListButton.grid(column=2, row=20, sticky=(S, E), pady=(0, 5))
         ## SERIOUSLY DO IT DUMMY
 
-        SaveListBox.bind("<Button-1>", LIST_MANAGER.EnableListButton)
+        TABULA_GUI.SaveListBox.bind("<Button-1>", LIST_MANAGER.EnableListButton)
 
         ttk.Button(mainframe, text="Backup", command=BACKUP_AND_LOAD.BackupSaves).grid(column=2, row=27, sticky=(S), pady=2)
         
-        ## LoadTree = ttk.Treeview(mainframe) leaning loadtree
-        ## LoadTree.grid(column=2, row=30, sticky=S)
+        LoadTree = ttk.Treeview(mainframe)  ## leaning loadtree
+        LoadTree.grid(column=2, row=30, sticky=S)
+        
 
         
         
