@@ -164,20 +164,20 @@ class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a probl
 
         ttk.Label(mainframe, text="Game Name").grid(column=2, row=12, sticky=(W), pady=7)
         TABULA_GUI.GameEntered = StringVar()
-        GameNameEntry = ttk.Entry(mainframe, width=100, textvariable=TABULA_GUI.GameEntered)
-        GameNameEntry.grid(column=2, row=13, sticky=(W, E))
+        TABULA_GUI.GameNameEntry = ttk.Entry(mainframe, width=100, textvariable=TABULA_GUI.GameEntered)
+        TABULA_GUI.GameNameEntry.grid(column=2, row=13, sticky=(W, E))
 
         ttk.Label(mainframe, text="Source File Path").grid(column=2, row=16, sticky=(W),)
         TABULA_GUI.SourcePathEntered = StringVar()
-        SourcePathEntry = ttk.Entry(mainframe, width=100, textvariable=TABULA_GUI.SourcePathEntered)
-        SourcePathEntry.grid(column=2, row=17, sticky=(W, E), pady=1)
+        TABULA_GUI.SourcePathEntry = ttk.Entry(mainframe, width=100, textvariable=TABULA_GUI.SourcePathEntered)
+        TABULA_GUI.SourcePathEntry.grid(column=2, row=17, sticky=(W, E), pady=1)
 
         ttk.Button(mainframe, text="Browse", command=LIST_MANAGER.SourceFileEntryBrowse).grid(column=2, row=16, sticky=(E), pady=3)
 
         ttk.Label(mainframe, text="Destination Path").grid(column=2, row=18, sticky=(W))
         TABULA_GUI.DestinationPathEntered = StringVar()
-        DestinationPathEntry = ttk.Entry(mainframe, width=100, textvariable=TABULA_GUI.DestinationPathEntered)
-        DestinationPathEntry.grid(column=2, row=19, sticky=(W, E), pady=1)
+        TABULA_GUI.DestinationPathEntry = ttk.Entry(mainframe, width=100, textvariable=TABULA_GUI.DestinationPathEntered)
+        TABULA_GUI.DestinationPathEntry.grid(column=2, row=19, sticky=(W, E), pady=1)
 
         ttk.Button(mainframe, text="Browse", command=LIST_MANAGER.DestinationPathEntryBrowse).grid(column=2, row=18, sticky=(E), pady=3)
 
@@ -197,8 +197,8 @@ class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a probl
 
         ttk.Button(mainframe, text="Backup", command=BACKUP_AND_LOAD.BackupSaves).grid(column=2, row=27, sticky=(S), pady=2)
         
-        LoadTree = ttk.Treeview(mainframe)  ## leaning loadtree
-        LoadTree.grid(column=2, row=30, sticky=S)
+        TABULA_GUI.LoadTree = ttk.Treeview(mainframe)  ## leaning loadtree
+        TABULA_GUI.LoadTree.grid(column=2, row=30, sticky=S)
         
 
         
