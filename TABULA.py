@@ -57,7 +57,11 @@ class LIST_MANAGER: ## Manages all the Lists functions
         }
             GLOBAL_VARS.FormattedEntries.append(formatted_entry)
     
-    def SaveToList(self): ## i could do this better if i knew what i was doing when i started it... -- fixed it a bit but also MAKE THIS A CLASS 
+    def UpdateLists():
+        TABULA_GUI.GameNameListVar.set(GLOBAL_VARS.GameEntriesList)
+        TABULA_GUI.SaveFileListVar.set(GLOBAL_VARS.SourceEntriesList)
+    
+    def SaveToList(): ## i could do this better if i knew what i was doing when i started it... -- fixed it a bit but also MAKE THIS A CLASS 
         game_entered = TABULA_GUI.GameEntered.get()
         source_entered = TABULA_GUI.SourcePathEntered.get()
         destination_entered = TABULA_GUI.DestinationPathEntered.get() 
@@ -72,11 +76,7 @@ class LIST_MANAGER: ## Manages all the Lists functions
         GLOBAL_VARS.EntriesList.append(entires_dict)
         GLOBAL_VARS.SourceEntriesList.append(source_entered)
         GLOBAL_VARS.GameEntriesList.append(game_entered)
-        self.UpdateLists()
-
-    def UpdateLists(self):
-        TABULA_GUI.GameNameListVar.set(GLOBAL_VARS.GameEntriesList)
-        TABULA_GUI.SaveFileListVar.set(GLOBAL_VARS.SourceEntriesList)
+        LIST_MANAGER.UpdateLists()
 
     def EnableListButton(*args):
         TABULA_GUI.RemoveListButton.configure(state=ACTIVE)
@@ -144,8 +144,8 @@ class DATA_SAVER: ## Saves Backup lists and other things to a dat
 
 class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a problem later but IT JUST WORKS -- MAKE THIS A CLASS -- Made this a class
     
-    def __init__(self, root):
-    
+    def __init__(self, mainframe):
+
         root.title("T.A.BU.L.A")
         root.geometry("850x520")
         sv_ttk.set_theme("dark")
@@ -155,26 +155,26 @@ class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a probl
         root.columnconfigure(0, weight=1)
         root.rowconfigure(0, weight=1)
 
-        SaveFileListVar = StringVar(value=GLOBAL_VARS.SourceEntriesList)
-        GameNameListVar = StringVar(value=GLOBAL_VARS.GameEntriesList)
+        TABULA_GUI.SaveFileListVar = StringVar(value=GLOBAL_VARS.SourceEntriesList)
+        TABULA_GUI.GameNameListVar = StringVar(value=GLOBAL_VARS.GameEntriesList)
 
         ttk.Label(mainframe, text="TWIM's semi-Automatic Back-Up & Load Application").grid(column=2, row=1, sticky=(N))
 
         ttk.Label(mainframe, text="Game Name").grid(column=2, row=12, sticky=(W), pady=7)
-        GameEntered = StringVar()
-        GameNameEntry = ttk.Entry(mainframe, width=100, textvariable=GameEntered)
+        TABULA_GUI.GameEntered = StringVar()
+        GameNameEntry = ttk.Entry(mainframe, width=100, textvariable=TABULA_GUI.GameEntered)
         GameNameEntry.grid(column=2, row=13, sticky=(W, E))
 
         ttk.Label(mainframe, text="Source File Path").grid(column=2, row=16, sticky=(W),)
-        SourcePathEntered = StringVar()
-        SourcePathEntry = ttk.Entry(mainframe, width=100, textvariable=SourcePathEntered)
+        TABULA_GUI.SourcePathEntered = StringVar()
+        SourcePathEntry = ttk.Entry(mainframe, width=100, textvariable=TABULA_GUI.SourcePathEntered)
         SourcePathEntry.grid(column=2, row=17, sticky=(W, E), pady=1)
 
         ttk.Button(mainframe, text="Browse", command=LIST_MANAGER.SourceFileEntryBrowse).grid(column=2, row=16, sticky=(E), pady=3)
 
         ttk.Label(mainframe, text="Destination Path").grid(column=2, row=18, sticky=(W))
-        DestinationPathEntered = StringVar()
-        DestinationPathEntry = ttk.Entry(mainframe, width=100, textvariable=DestinationPathEntered)
+        TABULA_GUI.DestinationPathEntered = StringVar()
+        DestinationPathEntry = ttk.Entry(mainframe, width=100, textvariable=TABULA_GUI.DestinationPathEntered)
         DestinationPathEntry.grid(column=2, row=19, sticky=(W, E), pady=1)
 
         ttk.Button(mainframe, text="Browse", command=LIST_MANAGER.DestinationPathEntryBrowse).grid(column=2, row=18, sticky=(E), pady=3)
@@ -182,9 +182,9 @@ class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a probl
         ttk.Button(mainframe, text="Add Save", command=LIST_MANAGER.SaveToList).grid(column=2, row=20, sticky=(S, W), pady=(3, 5))
         
         ### MAKE THIS A TREEVIEW MY GOD 
-        SaveListBox = Listbox(mainframe, listvariable=SaveFileListVar, height=12, width=120)
+        SaveListBox = Listbox(mainframe, listvariable=TABULA_GUI.SaveFileListVar, height=12, width=120)
         SaveListBox.grid(column=2, row=21, sticky=(W))
-        GameNameBox = Listbox(mainframe, listvariable=GameNameListVar, height=12, width=15, state=DISABLED)
+        GameNameBox = Listbox(mainframe, listvariable=TABULA_GUI.GameNameListVar, height=12, width=15, state=DISABLED)
         GameNameBox.grid(column=2, row=21, sticky=(E))
 
         RemoveListButton = ttk.Button(mainframe, text="Remove Save", state=DISABLED, command=LIST_MANAGER.RemoveFromList)
