@@ -1,17 +1,73 @@
-########################################################################################
-#                                                                                      #
-#                              MIT License                                             #
-#                                                                                      #
-#                     Copyright (c) 2024 TheWorldiMap                                  #
-#                                                                                      #
-#    Permission is hereby granted, free of charge, to any person obtaining a copy      #
-#    of this software and associated documentation files (the "Software"), to deal     #
-#    in the Software without restriction, including without limitation the rights      #
-#    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell         #
-#    copies of the Software, and to permit persons to whom the Software is             #
-#    furnished to do so, subject to the following conditions:                          #
-#                                                                                      #                                                 
-########################################################################################
+##########################################################################################
+#                                                                                        #
+#                                     MIT License                                        #
+#                                                                                        #
+#                           Copyright (c) 2024 TheWorldiMap                              #
+#                                                                                        #
+#      Permission is hereby granted, free of charge, to any person obtaining a copy      #
+#      of this software and associated documentation files (the "Software"), to deal     #
+#      in the Software without restriction, including without limitation the rights      #
+#      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell         #
+#      copies of the Software, and to permit persons to whom the Software is             #
+#      furnished to do so, subject to the following conditions:                          #
+#      The above copyright notice and this permission notice shall be included in all    #
+#      copies or substantial portions of the Software.                                   #
+#                                                                                        #
+#      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR        #
+#      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,          #
+#      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE       #
+#      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER            #
+#      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,     #
+#      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE     #
+#       SOFTWARE.                                                                        #
+#                                                                                        #
+##########################################################################################
+#                     TheWorldiMap                                     Daave             #
+##########################################################################################
+#              :#++:                                                                     #
+#               -%%#%*:                   :-=+*+++**-                                    #
+#                 +@**#%=            .-*#%###***#%#+.                                    #
+#                  :%#**#%: :=====-+#%#******#%#=                                        #
+#                    ##**#%%#***#@#******##*=.                                           #
+#                    :@%**%%***%%****#%%%@#.                                             #
+#                  :#@##%**%%#@#**#%@%****%@+                                            #
+#                 +@%#%%#%#*@%#*%#+=+#%%#**#@+                            ..::-:::::.    #
+#                %@@#+--::=*@@%*-::::::-+@#*#@*                      .:::::::-==-:-===   #
+#               %@*-::::-**:-#+::::::::=@%***#@+   :-*#.            .--::::-::------:    #
+#               @%-::::::+***##+*-::::=@#*****#@%%%%#%@           :::--:---:::---::      #
+#               .%%-::*#*##**%%##::::=@#*************@=         .:-::-----::--:::.       #
+#  *###****+**##%%%=::-*#%**@#*=:::::+*####%#%%%%#**#@       .:::::---:::::::::.         #
+#  *@=-======----:::::::-%#%*::::::::::::::::::-@%**@=     .:::::::::------::.           #
+#  -@+:::::::::::::::::::-%%-::::::::::::::::::=@**#%    .:::::::::::--::.               #
+#  .@#:::::::::::::::::::::-:::::::::::::::::::%%*#%.  .::::::::::::::::.                #
+#   +@=:::::::::::::::::::::::::::::::::::::::#@*#%   :::::::::::::-::::.                #
+#    #@=::::::::::::::::::::::::::::::::::::-#@#%+  .:::::::::::::=:--:::                #
+#     @%-::::::::::::::::::::::::::::::::::=@@%*. .::::::::::::::-=::-:::                #
+#     .*@*-::::::::::::::::::::::::::::::-#@@+.  .::::::::::::::-=:.  :::                #
+#       .*@#+-::::::::::::::::::::::::-+#@#-    :::::::::::::::==:    .:::               #
+#          =#@#+-:::::::::::::::-=*#%@#=:     .::::::::::::::--:.      ..:::..           #
+#             -+#%%##******#####*+=-:     .::::::::::::::::---:                          #
+#                  .:::---:.             .::::::::::::::---::                            #
+#                                        ::::::::::::---::.                              #
+#                                       .:::::::::::---.                                 #
+#                                      ::::::::::::::::::.                               #
+#                                    .::::::::::::::::::::::                             #
+#                                   ::::::::::.     ...:::::.                            #
+#                                 .:::::::::.         .:::::. .                          #
+#                                ::::::::::          .:::::::......                      #
+#                               :::::::::.                                               #
+#                             .::::::::.                                                 #
+# ########################################################################################
+
+# i learned a valuable lesson with this project.... TKINTER SUCKS ASS.
+# its old and half functional and missing core features 
+# the documentation is kinda raw and spread across like 3 sites 
+# and everything good ive done was a worka round for crap things 
+# like the stringvar and listboxes and its just damn raw
+# i had no idea about this when i started cause i have never even coded a gui before 
+# or even coded something from nothing but i now know this sucks 
+
+###########################################################################################
 
 import tkinter
 import shutil 
@@ -39,16 +95,10 @@ class GLOBAL_VARS: ## Data that everything touches
 
 class LIST_MANAGER: ## Manages all the Lists functions
     
-    def TreeViewInsertList(List, TargetTreeView):
-        print(List, TargetTreeView)
-        for item in List:
-            TargetTreeView.insert('', 'end', text=item)
-            
     def ListValues(InputDict, InputKey): ## list realisation function 
         OutputValues = [Key[InputKey] for Key in InputDict]
         return OutputValues
         
-    
     def FormatEntries():
         list_games = LIST_MANAGER.ListValues(GLOBAL_VARS.EntriesDictList, ("Game"))
         list_source_files = LIST_MANAGER.ListValues(GLOBAL_VARS.EntriesDictList, ("Source File"))
@@ -195,7 +245,6 @@ class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a probl
 
         ttk.Button(mainframe, text="Add Save", command=LIST_MANAGER.SaveToList).grid(column=2, row=20, sticky=(S, W), pady=(3, 5))
         
-        ### MAKE THIS A TREEVIEW MY GOD 
         TABULA_GUI.SaveListBox = Listbox(mainframe, listvariable=TABULA_GUI.SaveFileListVar, height=12, width=120)
         TABULA_GUI.SaveListBox.grid(column=2, row=21, sticky=(W))
         TABULA_GUI.GameNameBox = Listbox(mainframe, listvariable=TABULA_GUI.GameNameListVar, height=12, width=15, state=DISABLED)
@@ -203,22 +252,10 @@ class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a probl
 
         TABULA_GUI.RemoveListButton = ttk.Button(mainframe, text="Remove Save", state=DISABLED, command=LIST_MANAGER.RemoveFromList)
         TABULA_GUI.RemoveListButton.grid(column=2, row=20, sticky=(S, E), pady=(0, 5))
-        ## SERIOUSLY DO IT DUMMY
         
         TABULA_GUI.SaveListBox.bind("<Button-1>", LIST_MANAGER.EnableListButton)
 
         ttk.Button(mainframe, text="Backup", command=BACKUP_AND_LOAD.BackupSaves).grid(column=2, row=27, sticky=(S), pady=2)
-        
-        ## TABULA_GUI.LoadTree = ttk.Treeview(mainframe)  ## leaning loadtree
-        ## TABULA_GUI.LoadTree.grid(column=2, row=30, sticky=S)
-        ## TABULA_GUI.LoadTree.insert('', 'end', text="banana") ## insert with this
-        
-        ## TABULA_GUI.DEBUGBUTTON = ttk.Button(mainframe, text="DEBUG BUTTON", command=lambda: LIST_MANAGER.TreeViewInsertList(LIST_MANAGER.ListValues(GLOBAL_VARS.EntriesDictList, ("Source Path")), TABULA_GUI.LoadTree))
-        ## TABULA_GUI.DEBUGBUTTON.grid(column=2, row=20, sticky=(S))
-
-        
-        
-
         
         
 
