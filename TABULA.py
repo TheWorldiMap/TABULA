@@ -95,16 +95,10 @@ class GLOBAL_VARS: ## Data that everything touches
 
 class LIST_MANAGER: ## Manages all the Lists functions
     
-    #def TreeViewInsertList(List, TargetTreeView):
-        #print(List, TargetTreeView)
-        #for item in List:
-            #TargetTreeView.insert('', 'end', text=item)
-            
     def ListValues(InputDict, InputKey): ## list realisation function 
         OutputValues = [Key[InputKey] for Key in InputDict]
         return OutputValues
         
-    
     def FormatEntries():
         list_games = LIST_MANAGER.ListValues(GLOBAL_VARS.EntriesDictList, ("Game"))
         list_source_files = LIST_MANAGER.ListValues(GLOBAL_VARS.EntriesDictList, ("Source File"))
@@ -251,7 +245,6 @@ class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a probl
 
         ttk.Button(mainframe, text="Add Save", command=LIST_MANAGER.SaveToList).grid(column=2, row=20, sticky=(S, W), pady=(3, 5))
         
-        ### MAKE THIS A TREEVIEW MY GOD 
         TABULA_GUI.SaveListBox = Listbox(mainframe, listvariable=TABULA_GUI.SaveFileListVar, height=12, width=120)
         TABULA_GUI.SaveListBox.grid(column=2, row=21, sticky=(W))
         TABULA_GUI.GameNameBox = Listbox(mainframe, listvariable=TABULA_GUI.GameNameListVar, height=12, width=15, state=DISABLED)
@@ -259,33 +252,12 @@ class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a probl
 
         TABULA_GUI.RemoveListButton = ttk.Button(mainframe, text="Remove Save", state=DISABLED, command=LIST_MANAGER.RemoveFromList)
         TABULA_GUI.RemoveListButton.grid(column=2, row=20, sticky=(S, E), pady=(0, 5))
-        ## SERIOUSLY DO IT DUMMY
         
         TABULA_GUI.SaveListBox.bind("<Button-1>", LIST_MANAGER.EnableListButton)
 
         ttk.Button(mainframe, text="Backup", command=BACKUP_AND_LOAD.BackupSaves).grid(column=2, row=27, sticky=(S), pady=2)
         
         
-        ### Future New Window, learning treeview first and getting it all ready before making it a tab ###
-        
-        TABULA_GUI.LoadTree = ttk.Treeview(mainframe)  ## leaning loadtree
-        TABULA_GUI.LoadTree.grid(column=2, row=30, sticky=S)
-        ## TABULA_GUI.LoadTree.insert('', 'end', text="banana") ## insert with this
-        TABULA_GUI.LoadTree['columns'] = ('Date', 'Path')
-        
-        TABULA_GUI.LoadTree.column('#0', width=200, anchor='w')
-        TABULA_GUI.LoadTree.heading('#0', text="Game")
-        
-        TABULA_GUI.LoadTree.column('Date', width=200, anchor='center')
-        TABULA_GUI.LoadTree.heading('Date', text="DATE")
-        
-        TABULA_GUI.LoadTree.column('Path', width=420, anchor='e')
-        TABULA_GUI.LoadTree.heading('Path', text="Path")
-        
-        ## TABULA_GUI.DEBUGBUTTON = ttk.Button(mainframe, text="DEBUG BUTTON", command=lambda: LIST_MANAGER.TreeViewInsertList(LIST_MANAGER.ListValues(GLOBAL_VARS.EntriesDictList, ("Source Path")), TABULA_GUI.LoadTree))
-        ## TABULA_GUI.DEBUGBUTTON.grid(column=2, row=20, sticky=(S))
-        
-        ### Future New Window, learning treeview first and getting it all ready before making it a tab ###
 
 def main():
     root = Tk()            
