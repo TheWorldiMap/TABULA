@@ -30,8 +30,8 @@ class GLOBAL_VARS: ## Data that everything touches
     
     GameEntriesList = [] ## part of the next system to have seperated folders for each game       
     SourceEntriesList = [] ## list as displayed in the GOOEY (this is messy af and needs to be STOPPED)
-    EntriesList = []  ## Workhorse Data stucture should be an easy JSON when i lean that
-    FormattedEntries = [] ## workhorse part 2
+    EntriesDictList = []  ## Workhorse Data stucture should be an easy JSON when i lean that
+    FormattedEntriesDictList = [] ## workhorse part 2
     BackedUpFiles = [] ## list path to files fully backed up for listing in loading
     BackedUpPaths = [] ## list paths created to store files for listing  in loading
 
@@ -39,11 +39,21 @@ class GLOBAL_VARS: ## Data that everything touches
 
 class LIST_MANAGER: ## Manages all the Lists functions
     
+    def TreeViewInsertList(List, TargetTreeView):
+        print(List, TargetTreeView)
+        for item in List:
+            TargetTreeView.insert('', 'end', text=item)
+            
+    def ListValues(InputDict, InputKey): ## list realisation function 
+        OutputValues = [Key[InputKey] for Key in InputDict]
+        return OutputValues
+        
+    
     def FormatEntries():
-        list_games = [Game["Game"] for Game in GLOBAL_VARS.EntriesList]
-        list_source_files = [SourceFile["Source File"] for SourceFile in GLOBAL_VARS.EntriesList]
-        list_source_paths = [SourcePath["Source Path"] for SourcePath in GLOBAL_VARS.EntriesList]
-        list_destination_paths = [DestinationPath["Destination Path"] for DestinationPath in GLOBAL_VARS.EntriesList]
+        list_games = LIST_MANAGER.ListValues(GLOBAL_VARS.EntriesDictList, ("Game"))
+        list_source_files = LIST_MANAGER.ListValues(GLOBAL_VARS.EntriesDictList, ("Source File"))
+        list_source_paths = LIST_MANAGER.ListValues(GLOBAL_VARS.EntriesDictList, ("Source Path"))
+        list_destination_paths = LIST_MANAGER.ListValues(GLOBAL_VARS.EntriesDictList, ("Destination Path"))
 
         for Game, SourceFile, SourcePath, DestinationPath in zip(list_games, list_source_files, list_source_paths, list_destination_paths):
             full_source = (SourcePath + "\\" + SourceFile)
@@ -55,7 +65,7 @@ class LIST_MANAGER: ## Manages all the Lists functions
         "Full Destination" : full_destination,
         "Destination Path" : destination_path
         }
-            GLOBAL_VARS.FormattedEntries.append(formatted_entry)
+            GLOBAL_VARS.FormattedEntriesDictList.append(formatted_entry)
     
     def UpdateLists():
         TABULA_GUI.GameNameListVar.set(GLOBAL_VARS.GameEntriesList)
@@ -73,7 +83,7 @@ class LIST_MANAGER: ## Manages all the Lists functions
             "Source Path" : source_path, 
             "Destination Path" : destination_entered,
         }
-        GLOBAL_VARS.EntriesList.append(entires_dict)
+        GLOBAL_VARS.EntriesDictList.append(entires_dict)
         GLOBAL_VARS.SourceEntriesList.append(source_entered)
         GLOBAL_VARS.GameEntriesList.append(game_entered)
         LIST_MANAGER.UpdateLists()
@@ -88,7 +98,7 @@ class LIST_MANAGER: ## Manages all the Lists functions
         del GLOBAL_VARS.GameEntriesList[SelectedIndex[0]]
         TABULA_GUI.SaveListBox.delete([SelectedIndex[0]])
         TABULA_GUI.GameNameBox.delete([SelectedIndex[0]])
-        GLOBAL_VARS.EntriesList.pop(SelectedIndex[0])
+        GLOBAL_VARS.EntriesDictList.pop(SelectedIndex[0])
         TABULA_GUI.RemoveListButton.configure(state=DISABLED)
         LIST_MANAGER.UpdateLists()
         DATA_SAVER.SaveList()
@@ -107,9 +117,9 @@ class BACKUP_AND_LOAD:
             
     def BackupSaves(): ## this looks kinda raw to my eyes but i am actually proud of how simple this is
         LIST_MANAGER.FormatEntries()
-        list_full_sources = [FullSource["Full Source"] for FullSource in GLOBAL_VARS.FormattedEntries]
-        list_full_destinations = [FullDestination["Full Destination"] for FullDestination in GLOBAL_VARS.FormattedEntries]
-        list_destination_paths = [DestinationPath["Destination Path"] for DestinationPath in GLOBAL_VARS.FormattedEntries]
+        list_full_sources = [FullSource["Full Source"] for FullSource in GLOBAL_VARS.FormattedEntriesDictList]
+        list_full_destinations = [FullDestination["Full Destination"] for FullDestination in GLOBAL_VARS.FormattedEntriesDictList]
+        list_destination_paths = [DestinationPath["Destination Path"] for DestinationPath in GLOBAL_VARS.FormattedEntriesDictList]
         
         for FullDestination, FullSource, DestinationPath in zip(list_full_destinations, list_full_sources, list_destination_paths):
             if not os.path.exists(DestinationPath):
@@ -126,17 +136,19 @@ class DATA_SAVER: ## Saves Backup lists and other things to a dat
     
     def SaveList():
         with open("BackupsList.dat", "wb") as Data:
-            pickle.dump(GLOBAL_VARS.EntriesList, Data)
+            pickle.dump(GLOBAL_VARS.EntriesDictList, Data)
+            print("saved", GLOBAL_VARS.EntriesDictList)
             pickle.dump(GLOBAL_VARS.SourceEntriesList, Data)
             pickle.dump(GLOBAL_VARS.GameEntriesList, Data)
-            pickle.dump(GLOBAL_VARS.FormattedEntries, Data)
+            pickle.dump(GLOBAL_VARS.FormattedEntriesDictList, Data)
         
     def LoadList():
             with open("BackupsList.dat", "rb") as Data:
-                GLOBAL_VARS.EntriesList = pickle.load(Data)
+                GLOBAL_VARS.EntriesDictList = pickle.load(Data)
+                print("Loaded", GLOBAL_VARS.EntriesDictList)
                 GLOBAL_VARS.SourceEntriesList = pickle.load(Data)
                 GLOBAL_VARS.GameEntriesList = pickle.load(Data)
-                GLOBAL_VARS.FormattedEntries = pickle.load(Data)    
+                GLOBAL_VARS.FormattedEntriesDictList = pickle.load(Data)    
                    
     def AutoLoad():
         if os.path.exists("BackupsList.dat"):
@@ -164,20 +176,20 @@ class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a probl
 
         ttk.Label(mainframe, text="Game Name").grid(column=2, row=12, sticky=(W), pady=7)
         TABULA_GUI.GameEntered = StringVar()
-        GameNameEntry = ttk.Entry(mainframe, width=100, textvariable=TABULA_GUI.GameEntered)
-        GameNameEntry.grid(column=2, row=13, sticky=(W, E))
+        TABULA_GUI.GameNameEntry = ttk.Entry(mainframe, width=100, textvariable=TABULA_GUI.GameEntered)
+        TABULA_GUI.GameNameEntry.grid(column=2, row=13, sticky=(W, E))
 
         ttk.Label(mainframe, text="Source File Path").grid(column=2, row=16, sticky=(W),)
         TABULA_GUI.SourcePathEntered = StringVar()
-        SourcePathEntry = ttk.Entry(mainframe, width=100, textvariable=TABULA_GUI.SourcePathEntered)
-        SourcePathEntry.grid(column=2, row=17, sticky=(W, E), pady=1)
+        TABULA_GUI.SourcePathEntry = ttk.Entry(mainframe, width=100, textvariable=TABULA_GUI.SourcePathEntered)
+        TABULA_GUI.SourcePathEntry.grid(column=2, row=17, sticky=(W, E), pady=1)
 
         ttk.Button(mainframe, text="Browse", command=LIST_MANAGER.SourceFileEntryBrowse).grid(column=2, row=16, sticky=(E), pady=3)
 
         ttk.Label(mainframe, text="Destination Path").grid(column=2, row=18, sticky=(W))
         TABULA_GUI.DestinationPathEntered = StringVar()
-        DestinationPathEntry = ttk.Entry(mainframe, width=100, textvariable=TABULA_GUI.DestinationPathEntered)
-        DestinationPathEntry.grid(column=2, row=19, sticky=(W, E), pady=1)
+        TABULA_GUI.DestinationPathEntry = ttk.Entry(mainframe, width=100, textvariable=TABULA_GUI.DestinationPathEntered)
+        TABULA_GUI.DestinationPathEntry.grid(column=2, row=19, sticky=(W, E), pady=1)
 
         ttk.Button(mainframe, text="Browse", command=LIST_MANAGER.DestinationPathEntryBrowse).grid(column=2, row=18, sticky=(E), pady=3)
 
@@ -192,13 +204,19 @@ class TABULA_GUI: ## GOOEY - this is kinda wackily formatted and will be a probl
         TABULA_GUI.RemoveListButton = ttk.Button(mainframe, text="Remove Save", state=DISABLED, command=LIST_MANAGER.RemoveFromList)
         TABULA_GUI.RemoveListButton.grid(column=2, row=20, sticky=(S, E), pady=(0, 5))
         ## SERIOUSLY DO IT DUMMY
-
+        
         TABULA_GUI.SaveListBox.bind("<Button-1>", LIST_MANAGER.EnableListButton)
 
         ttk.Button(mainframe, text="Backup", command=BACKUP_AND_LOAD.BackupSaves).grid(column=2, row=27, sticky=(S), pady=2)
         
-        LoadTree = ttk.Treeview(mainframe)  ## leaning loadtree
-        LoadTree.grid(column=2, row=30, sticky=S)
+        ## TABULA_GUI.LoadTree = ttk.Treeview(mainframe)  ## leaning loadtree
+        ## TABULA_GUI.LoadTree.grid(column=2, row=30, sticky=S)
+        ## TABULA_GUI.LoadTree.insert('', 'end', text="banana") ## insert with this
+        
+        ## TABULA_GUI.DEBUGBUTTON = ttk.Button(mainframe, text="DEBUG BUTTON", command=lambda: LIST_MANAGER.TreeViewInsertList(LIST_MANAGER.ListValues(GLOBAL_VARS.EntriesDictList, ("Source Path")), TABULA_GUI.LoadTree))
+        ## TABULA_GUI.DEBUGBUTTON.grid(column=2, row=20, sticky=(S))
+
+        
         
 
         
